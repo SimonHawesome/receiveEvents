@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+    <script>
+    //defaults to connect to the host that serves the page
+    $( document ).ready(function() {
+
+        var socket = io();
+
+        //detect gestures through hammer.js
+        var touchArea = document.getElementById('holder');
+
+        var mc = new Hammer(touchArea);
+
+        mc.on("panleft", function(ev) {
+          socket.emit('pan left', ev.type);
+        });
+
+        mc.on("panright", function(ev) {
+          socket.emit('pan right', ev.type);
+        });
+
+        mc.on("tap", function(ev) {
+          socket.emit('tap', ev.type);
+        });
+
+        mc.on("press", function(ev) {
+          socket.emit('press', ev.type);
+        });
+
+
+        socket.on('pan left', function(msg){
+           $('#holder').text(msg);
+        });
+        socket.on('pan right', function(msg){
+           $('#holder').text(msg);
+        });
+        socket.on('tap', function(msg){
+           $('#holder').text(msg);
+        });
+        socket.on('press', function(msg){
+           $('#holder').text(msg);
+        });
+    });
+    </script>
+    <title>Socket.IO chat</title>
+    <style>
+      *{
+        padding:0;
+        margin: 0;
+      }
+      #holder{
+        width:100%;
+        height:100%;
+        position:fixed;
+        background-color:#2c3e50;
+
+        text-align: center;
+        font: 30px/300px Helvetica, Arial, sans-serif;
+        color:#f39c12;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="holder"></div>
+  </body>
+</html>
